@@ -66,10 +66,13 @@ export default {
     }
   },
   created() {
+    this.$store.dispatch('setLoading', true);
     getMoviesInfo({
       movie_id: this.session.movie_id
     }).then(res => {
       this.movie = res.data;
+    }).catch(err => alert(err)).finally(() => {
+      this.$store.dispatch('setLoading', false);
     })
   },
   methods: {

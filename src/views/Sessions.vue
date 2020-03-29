@@ -23,12 +23,12 @@ export default {
     SessionCard,
   },
   created() {
+    this.$store.dispatch('setLoading', true);
     getSessions().then(sessions => {
       this.sessions = sessions.data;
+    }).catch(err => alert(err)).finally(() => {
+      this.$store.dispatch('setLoading', false);
     })
-  },
-  computed: {
-
   },
   methods: {
     openMovie(movieId) {

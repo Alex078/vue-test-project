@@ -25,16 +25,14 @@ export default {
     MovieCard,
   },
   created() {
+    this.$store.dispatch('setLoading', true);
     getMoviesInfo().then(res => {
       this.movies = res.data;
     }).catch(err => {
-
+      alert(err);
     }).finally(() => {
-
+      this.$store.dispatch('setLoading', false);
     })
-  },
-  computed: {
-
   },
   methods: {
     openMovie(movieId) {
@@ -44,7 +42,7 @@ export default {
           movieId
         }
       })
-    }
+    },
   }
 }
 </script>

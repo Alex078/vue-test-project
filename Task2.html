@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+  <form class="form js-form-el">
+    <input type="text" class="form__input js-input-el" placeholder="Input only numbers">
+    <div class="form__buttons">
+      <button class="form__buttons-item inactive js-set-btn" type="submit">Set</button>
+      <button class="form__buttons-item form__buttons-item--red js-clear-btn" type="button">Clear</button>
+    </div>
+  </form>
+</body>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const KEY = 'num23';
+  const $btnSubmit = document.querySelector('.js-set-btn');
+  const $input = document.querySelector('.js-input-el');
+
+  //apend paragraph
+  appendHtml(KEY);
+
+  //only number
+  ["input", "keydown", "keyup", "mousedown", "mouseup", "select", "contextmenu", "drop"].forEach(function(event) {
+    $input.addEventListener(event, function() {
+      if (/^\d*\.?\d*$/.test(this.value)) {
+        this.oldValue = this.value;
+        this.oldSelectionStart = this.selectionStart;
+        this.oldSelectionEnd = this.selectionEnd;
+      } else if (this.hasOwnProperty("oldValue")) {
+        this.value = this.oldValue;
+        this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+      } else {
+        this.value = "";
+        $btnSubmit.classList.add('inactive');
+      }
+      this.value.length ? $btnSubmit.classList.remove('inactive') : $btnSubmit.classList.add('inactive');
+    });
+  });
+
+  //add value to LocalStorage
+  document.querySelector('.js-form-el').addEventListener('submit', function (e) {
+    e.preventDefault();
+    if ($input.value.length) {
+      localStorage.setItem(KEY, $input.value);
+      alert('Successfully added to LocalStorage');
+    }
+  });
+
+  //delete value from LocalStorage
+  document.querySelector('.js-clear-btn').addEventListener('click', function () {
+    $input.value = '';
+    $btnSubmit.classList.add('inactive');
+    if(localStorage.getItem(KEY)) {
+      localStorage.removeItem(KEY);
+      alert('Successfully removed from LocalStorage');
+    }
+  });
+});
+
+const appendHtml = (KEY) => {
+  const value = localStorage.getItem(KEY);
+
+  if(value) {
+    const cssClass = value % 2 ? 'red' : 'green';
+    document.querySelector('.js-form-el').insertAdjacentHTML('beforeBegin', `<p class="${cssClass}">${value}</p>`);
+  }
+}
+
+</script>
+
+<style>
+  body {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px;
+  }
+
+  p {
+    color: #ffffff;
+    padding: 10px;
+    font-weight: bold;
+  }
+
+  p.green {
+    background: green;
+  }
+
+  p.red {
+    background: red;
+  }
+
+  .form {
+    width: 100%;
+  }
+
+  .form__input {
+    height: 60px;
+    width: 100%;
+    font-size: 20px;
+    padding: 10px;
+    box-sizing: border-box;
+  }
+
+  .form__buttons {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 20px;
+  }
+
+  .form__buttons-item {
+    background: #50D113;
+    color: #ffffff;
+    width: 100px;
+    height: 40px;
+    margin: 0 4px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+  .form__buttons-item.inactive {
+    pointer-events: none;
+    background: #cccccc;
+  }
+
+  .form__buttons-item--red {
+    background: red;
+  }
+</style>
+</html>

@@ -5,11 +5,19 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    loading: false,
   },
   mutations: {
+    SET_DATA (state, { type, data }) {
+      state[type] = data;
+    },
   },
   actions: {
-  },
-  modules: {
+    setLoading ({ commit }, loading) {
+      commit('SET_DATA', {
+        data: loading,
+        type: 'loading'
+      });
+    },
   }
 })

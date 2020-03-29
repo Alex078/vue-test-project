@@ -26,9 +26,12 @@ export default {
   },
   methods: {
     async getDataAboutMovie() {
+      this.$store.dispatch('setLoading', true);
       this.movie = await getMoviesInfo({
         movie_id: this.$route.params.movieId
-      }).then(r => r.data);
+      }).then(r => r.data).catch(err => alert(err)).finally(() => {
+        this.$store.dispatch('setLoading', false);
+      })
     }
   },
 }

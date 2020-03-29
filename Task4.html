@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<div class="container">
+  <div class="row js-products-box">
+
+  </div>
+</div>
+</body>
+
+<script>
+
+document.addEventListener('DOMContentLoaded', async () => {
+  const $box = document.querySelector('.js-products-box');
+  const products = await fetch('http://54.39.188.42/').then(resp => resp.text()).then(r => JSON.parse(atob(r)));
+
+  products.forEach(el => {
+    $box.insertAdjacentHTML('beforeEnd', getProductCard(el));
+  });
+});
+
+const getProductCard = product => {
+  let optionsArr = Object.entries(product.options[0]).map(el => `${el[0].replace('_', ' ')}: ${el[1]}`);
+  let optionsHtml = optionsArr.map(el => `<li class="card__options-item">${el}</li>`).join('');
+
+  return `<div class="card">
+      <div class="card__id">#${product.id}</div>
+      <div class="card__title">${product.title}</div>
+      <div class="card__sku">${product.sku}</div>
+      <img src="${product.image}" alt="" class="card__img">
+      <div class="card__options">
+        <div class="card__options-title">Product options:</div>
+        <ul class="card__options-list">
+          ${optionsHtml}
+        </ul>
+      </div>
+      <div class="card__price">${Number(product.price).toFixed(2)} ${product.currency}</div>
+    </div>`;
+}
+
+</script>
+
+<style>
+  body {
+    margin: 20px 0 0;
+  }
+
+  .container {
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 0 16px;
+  }
+
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -8px;
+  }
+
+  .card {
+    flex: 0 0 calc(100% - 16px);
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    padding: 16px;
+    text-align: center;
+    box-sizing: border-box;
+    margin: 0 8px 16px;
+    overflow: hidden;
+  }
+
+  .card__id {
+    margin-bottom: 8px;
+  }
+
+  .card__title {
+    font-size: 16px;
+    margin-bottom: 4px;
+  }
+
+  .card__sku {
+    text-transform: uppercase;
+  }
+
+  .card__img {
+    display: block;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .card__options {
+    margin-top: 10px;
+  }
+
+  .card__options-title {
+    text-align: center;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    font-size: 14px;
+    font-weight: bold;
+  }
+
+  .card__options-list{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+  }
+
+  .card__options-item{
+    font-size: 16px;
+    font-style: italic;
+    line-height: 1.2;
+    padding-left: 10px;
+  }
+
+  .card__options-item:first-letter{
+    text-transform: uppercase;
+  }
+
+  .card__price {
+    font-weight: bold;
+    font-size: 20px;
+    margin-top: 20px;
+  }
+
+  @media (min-width: 460px)  {
+    .card {
+      flex: 0 0 calc(50% - 16px);
+    }
+  }
+
+  @media (min-width: 992px)  {
+    .card {
+      flex: 0 0 calc(25% - 16px);
+    }
+  }
+</style>
+</html>

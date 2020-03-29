@@ -14,7 +14,7 @@
       <p
         class="movie-card__descr"
         :class="{'movie-card__descr--all' : inline}"
-      >{{ movie.description }}</p>
+      >{{ getMovieDescr }}</p>
       <div class="movie-card__date">
         <span class="movie-card__date-title">Date of release:</span>
         <span class="movie-card__date-val"></span>
@@ -39,6 +39,9 @@ export default {
   computed: {
     getDate() {
       return new Date(this.movie.dateOfRelease).toLocaleDateString()
+    },
+    getMovieDescr() {
+      return this.inline ? this.movie.description : `${this.movie.description.slice(0, 100)}...`
     }
   }
 }
@@ -59,7 +62,7 @@ export default {
     height: 250px;
     width: 100%;
     object-fit: cover;
-    background-color: #eeeeee;
+    background-color: $gray-color;
 
     &--inline {
       max-width: 300px;

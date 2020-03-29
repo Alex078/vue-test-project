@@ -53,9 +53,6 @@ export default {
       this.places = sessions.data.places;
     })
   },
-  computed: {
-
-  },
   methods: {
     selectPlace(row_id, place_position) {
       const bodyForReq = {
@@ -65,10 +62,13 @@ export default {
         isFree : false
       }
 
+      this.$store.dispatch('setLoading', true);
       reservPlace(bodyForReq).then(res => {
-          this.reservationCode = res.data;
-          this.showSuccess = true;
-        })
+        this.reservationCode = res.data;
+        this.showSuccess = true;
+      }).catch(err => alert(err)).finally(() => {
+        this.$store.dispatch('setLoading', false);
+      })
     },
   }
 }
@@ -82,7 +82,7 @@ export default {
   right: 0;
   bottom: 0;
   z-index: 100;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba($black-color, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
